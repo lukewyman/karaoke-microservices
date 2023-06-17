@@ -23,16 +23,16 @@ def get_db():
     return client['karaoke']
 
 
-async def get_all_songs():
+async def get_all_songs_db():
     songs = await get_db()['song-library'].find({}).to_list(None)
     return songs
 
 
-async def get_song(song_id):
+async def get_song_db(song_id):
     return await get_db()['song-library'].find_one({'_id': song_id})
 
 
-async def create_song(song: dict) -> dict:
+async def create_song_db(song: dict) -> dict:
     new_song = await get_db()['song-library'].insert_one(song)
     inserted_song = await get_db()['song-library'].find_one({'_id': new_song.inserted_id})
     logger.info(f'Inserted Song: {inserted_song}')
@@ -40,7 +40,7 @@ async def create_song(song: dict) -> dict:
     return inserted_song
 
 
-async def update_song(id: str, song_data: dict):
+async def update_song_db(id: str, song_data: dict):
     logger.info(f'Song ID: {id}, Song data: {song_data}')
     song_library = get_db()['song-library']
     update_result = await song_library.update_one(
@@ -51,7 +51,7 @@ async def update_song(id: str, song_data: dict):
     return update_result
 
 
-async def delete_song(id: str):
+async def delete_song_db(id: str):
     logger.info(f'Song ID: {id}')
     song_library = get_db()['song-library']
     delete_result = await song_library.delete_one({'_id': id})

@@ -18,8 +18,7 @@ class PyObjectId(ObjectId):
         field_schema.update(type='string')    
 
 
-class Song(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')
+class SongData(BaseModel):
     song_title: str 
     artist: str 
 
@@ -33,3 +32,11 @@ class Song(BaseModel):
                 'artist': 'Rolling Stones'
             }
         }
+
+
+class Song(SongData):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias='_id')    
+
+    
+
+
