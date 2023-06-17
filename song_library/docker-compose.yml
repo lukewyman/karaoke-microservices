@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./src
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8080
+    volumes:
+      - ./src/:/usr/src/app/
+    ports:
+      - 8081:8080
+  mongo:
+    container_name: mongo 
+    image: mongo:5.0.15-focal 
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/data/karaoke-mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password1
