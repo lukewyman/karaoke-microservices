@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./src
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8080
+    volumes:
+      - ./src/:/usr/src/app/
+    ports:
+      - 8083:8080
+    environment:
+      - DATABASE_URL=postgresql://singers_user:pa55w0RD@db/karaoke
