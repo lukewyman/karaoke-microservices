@@ -49,6 +49,8 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1 
 
       - name: Build, tag and push to Amazon ECR
+        id: build_and_push
+        working-directory: ./microservices/song_library/src
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REPOSITORY: karaoke-app-image-repos-dev-song-library
