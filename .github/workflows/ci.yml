@@ -45,7 +45,7 @@ jobs:
 
       - name: Run unit tests
         id: unit_tests
-        working-directory: ./microservices/${{ matrix.microservice.dir }}/src
+        working-directory: ./microservices/${{ matrix.microservice.dir }}
         run: |
           docker-compose up -d --build
           docker-compose exec web pytest .
