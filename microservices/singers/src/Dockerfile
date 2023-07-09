@@ -9,7 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # copy requirements file
-COPY ./requirements.txt /usr/src/app/requirements.txt
+COPY ./requirements.test.txt /usr/src/app/requirements.test.txt
 
 # install dependencies
 RUN set -eux \
@@ -17,7 +17,7 @@ RUN set -eux \
          openssl-dev libffi-dev gcc musl-dev python3-dev \
         postgresql-dev bash \
     && pip install --upgrade pip setuptools wheel \
-    && pip install -r /usr/src/app/requirements.txt \
+    && pip install -r /usr/src/app/requirements.test.txt \
     && rm -rf /root/.cache/pip
 
 # copy project

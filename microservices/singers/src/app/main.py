@@ -1,6 +1,7 @@
 import uuid
 import logging 
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas 
@@ -21,6 +22,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get('/health')
+async def health_check():
+    return JSONResponse(status_code=200, content='OK')
 
 
 @app.post("/singers/", response_model=schemas.Singer)
