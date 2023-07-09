@@ -11,7 +11,8 @@ from .database import SessionLocal, engine
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-models.Base.metadata.create_all(bind=engine)
+if engine:
+    models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
