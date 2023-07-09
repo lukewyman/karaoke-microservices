@@ -1,7 +1,8 @@
 variable "repository_names" {
   description = "List of docker image repository names"
   default = [
-    "song-library"
+    "song-library",
+    "singers"
   ]
 }
 
