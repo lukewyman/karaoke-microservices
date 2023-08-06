@@ -9,4 +9,6 @@ services:
     ports:
       - 8083:8080
     environment:
-      - DATABASE_URL=postgresql://singers_user:pa55w0RD@db/karaoke
+      - QUEUES_TABLE_NAME=queues
+      - ENQUEUED_SINGERS_TABLE_NAME=enqueued_singers
+      - SONG_CHOICES_TABLE_NAME=song_choices
