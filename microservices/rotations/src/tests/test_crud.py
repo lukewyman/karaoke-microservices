@@ -1,30 +1,19 @@
 import uuid 
 from datetime import datetime
 from moto import mock_dynamodb
-from app.models import Queue, EnqueuedSinger, SongChoice
+from app.models import QueueDB, EnqueuedSingerDB, SongChoiceDB
+from app.domain import QueueCreate
 import app.crud as crud
-from .data import SONG_CHOICES, ENQUEUED_SINGERS
+from .data import (
+    SONG_CHOICES, 
+    ENQUEUED_SINGERS,
+    _setup_queues_table,
+    _setup_song_choices_table,
+    _setup_enqueued_singers_table,
+    _populate_song_choices_table,
+    _populate_enqueued_singers_table
+)
 
-
-def _setup_queues_table():
-    Queue.create_table()
-
-
-def _setup_enqueued_singers_table():
-    EnqueuedSinger.create_table()
-
-
-def _populate_enqueued_singers_table(enqueued_singers):
-    for enqueued_singer in enqueued_singers:
-        EnqueuedSinger(**enqueued_singer).save()
-
-
-def _setup_song_choices_table():
-    SongChoice.create_table()
-
-def _populate_song_choices_table(choices):
-    for choice in choices:
-        SongChoice(**choice).save()
 
 
 @mock_dynamodb
@@ -39,7 +28,7 @@ def test_create_song_choice():
                             song_id=song_id, 
                             position=position_id)
 
-    assert SongChoice.count() == 1
+    assert SongChoiceDB.count() == 1
 
 
 @mock_dynamodb
@@ -90,7 +79,7 @@ def test_update_choices_with_new_choice():
 
     enqueued_singer_id = 'e2520391-b24c-41ca-96c0-1e8813272d85'
     choices = list(crud._get_song_choices(enqueued_singer_id=enqueued_singer_id))
-    new_choice = SongChoice(enqueued_singer_id=enqueued_singer_id, 
+    new_choice = SongChoiceDB(enqueued_singer_id=enqueued_singer_id, 
                             song_id='song-choice-4', 
                             position=4)
     choices.append(new_choice)
@@ -116,7 +105,7 @@ def test_create_enqueued_singer():
                                 enqueued_singer_id=enqueued_singer_id, 
                                 queue_position=queue_position)
     
-    assert EnqueuedSinger.count() == 1
+    assert EnqueuedSingerDB.count() == 1
 
 
 @mock_dynamodb
@@ -166,7 +155,7 @@ def test_update_enqueued_singers_with_new_singer():
     queue_id = '240722c4-16a4-46e5-89fd-773445d7d38e'
     enqueued_singers = list(crud._get_enqueued_singers(queue_id))
 
-    new_singer = EnqueuedSinger(queue_id=queue_id,
+    new_singer = EnqueuedSingerDB(queue_id=queue_id,
                                 singer_id='8d8dcd6c-44bf-4fce-8d1c-c0d102798c35',
                                 enqueued_singer_id='d28160fc-4db8-4671-a33a-a64561d3c074',
                                 queue_position=4)
@@ -176,11 +165,13 @@ def test_update_enqueued_singers_with_new_singer():
 
     assert len(updated_singers) == 4
 
+
 @mock_dynamodb
 def test_create_queue():
     _setup_queues_table() 
 
-    location_id = uuid.uuid4()
-    crud.create_queue(location_id=location_id)
+    queue_data = QueueCreate(location_id=uuid.uuid4())
+    queue = crud.create_queue(queue_data)
 
-    assert Queue.count() == 1
+    assert QueueDB.count() == 1
+    

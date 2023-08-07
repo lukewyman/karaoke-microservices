@@ -6,16 +6,17 @@ from pynamodb.attributes import (
 )
 
 
-class Queue(Model):
+class QueueDB(Model):
     class Meta:
         table_name = 'queues'
 
     queue_id = UnicodeAttribute(hash_key=True)
     location_id = UnicodeAttribute()
     event_date = UTCDateTimeAttribute()
+    current_singer_index = NumberAttribute(default=0)
 
 
-class EnqueuedSinger(Model):
+class EnqueuedSingerDB(Model):
     class Meta:
         table_name = 'enqueued_singers'
 
@@ -25,7 +26,7 @@ class EnqueuedSinger(Model):
     queue_position = NumberAttribute(range_key=True)
 
 
-class SongChoice(Model):
+class SongChoiceDB(Model):
     class Meta:
         table_name = 'song_choices'
 

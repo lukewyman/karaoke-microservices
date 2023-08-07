@@ -1,3 +1,26 @@
+from app.models import QueueDB, EnqueuedSingerDB, SongChoiceDB
+
+def _setup_queues_table():
+    QueueDB.create_table()
+
+
+def _setup_enqueued_singers_table():
+    EnqueuedSingerDB.create_table()
+
+
+def _populate_enqueued_singers_table(enqueued_singers):
+    for enqueued_singer in enqueued_singers:
+        EnqueuedSingerDB(**enqueued_singer).save()
+
+
+def _setup_song_choices_table():
+    SongChoiceDB.create_table()
+
+def _populate_song_choices_table(choices):
+    for choice in choices:
+        SongChoiceDB(**choice).save()
+
+
 SONG_CHOICES = [
     {
         'enqueued_singer_id': 'e2520391-b24c-41ca-96c0-1e8813272d85',
