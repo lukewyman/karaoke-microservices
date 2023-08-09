@@ -1,3 +1,4 @@
+import os
 from pynamodb.models import Model 
 from pynamodb.attributes import (
     UnicodeAttribute, 
@@ -6,9 +7,16 @@ from pynamodb.attributes import (
 )
 
 
+AWS_REGION = os.environ['AWS_REGION']
+QUEUES_TABLE_NAME = os.environ['QUEUES_TABLE_NAME']
+ENQUEUED_SINGERS_TABLE_NAME = os.environ['ENQUEUED_SINGERS_TABLE_NAME']
+SONG_CHOICES_TABLE_NAME = os.environ['SONG_CHOICES_TABLE_NAME']
+
+
 class QueueDB(Model):
     class Meta:
-        table_name = 'queues'
+        table_name = QUEUES_TABLE_NAME
+        region = AWS_REGION
 
     queue_id = UnicodeAttribute(hash_key=True)
     location_id = UnicodeAttribute()
@@ -18,7 +26,8 @@ class QueueDB(Model):
 
 class EnqueuedSingerDB(Model):
     class Meta:
-        table_name = 'enqueued_singers'
+        table_name = ENQUEUED_SINGERS_TABLE_NAME
+        region = AWS_REGION
 
     queue_id = UnicodeAttribute(hash_key=True)
     singer_id = UnicodeAttribute()
@@ -28,7 +37,8 @@ class EnqueuedSingerDB(Model):
 
 class SongChoiceDB(Model):
     class Meta:
-        table_name = 'song_choices'
+        table_name = SONG_CHOICES_TABLE_NAME
+        region = AWS_REGION
 
     enqueued_singer_id = UnicodeAttribute(hash_key=True)
     song_id = UnicodeAttribute()

@@ -20,7 +20,7 @@ def create_queue(queue_data: QueueCreate=Body(...)):
     return JSONResponse(status_code=201, content=jsonable_encoder(queue))
 
 
-@router.post('/queues/{queue_id}/singers/{enqueued_singer_id}/', 
-             response_description='Add singer to queue', response_class=Queue)
-def enqueue_singer(singer_data: EnqueuedSingerCreate=Body(...)):
-    pass
+# @router.post('/queues/{queue_id}/singers/{enqueued_singer_id}/', 
+#              response_description='Add singer to queue', response_class=Queue)
+# def enqueue_singer(singer_data: EnqueuedSingerCreate=Body(...)):
+#     pass

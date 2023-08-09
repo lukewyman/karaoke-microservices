@@ -9,6 +9,9 @@ services:
     ports:
       - 8083:8080
     environment:
-      - QUEUES_TABLE_NAME=queues
-      - ENQUEUED_SINGERS_TABLE_NAME=enqueued_singers
-      - SONG_CHOICES_TABLE_NAME=song_choices
+      - QUEUES_TABLE_NAME=karaoke-app-local-dev-queues
+      - ENQUEUED_SINGERS_TABLE_NAME=karaoke-app-local-dev-song-choices
+      - SONG_CHOICES_TABLE_NAME=karaoke-app-local-dev-enqueued-singers
+      - AWS_ACCESS_KEY_ID=${HOST_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${HOST_AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=us-west-2
