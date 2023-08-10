@@ -1,6 +1,7 @@
 import uuid 
 from datetime import datetime
-from app.domain import Queue, Rotations
+from app.domain import Queue
+from app.rotations import Rotations
 import pytest
 
 
@@ -29,23 +30,27 @@ def test_create_an_empty_queue(rotations_fixture):
     assert rotations_fixture.current_singer == None
 
 
-def test_add_a_singer_to_a_queue(rotations_fixture, singers_fixture):
+def test_add_a_singer_to_a_queue(rotations_fixture: Rotations, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
 
     assert len(rotations_fixture.queue.singers) == 1
     assert rotations_fixture.current_singer.singer_id == singers_fixture[1]
+    assert rotations_fixture.queue.singers[0].position == 1
 
 
-def test_add_multiple_singers_to_a_queue(rotations_fixture, singers_fixture):
+def test_add_multiple_singers_to_a_queue(rotations_fixture, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
     
     assert len(rotations_fixture.queue.singers) == 3
     assert rotations_fixture.current_singer.singer_id == singers_fixture[1]
+    assert rotations_fixture.queue.singers[0].position == 1
+    assert rotations_fixture.queue.singers[1].position == 2
+    assert rotations_fixture.queue.singers[2].position == 3
 
 
-def test_cannot_add_singer_already_in_rotation(rotations_fixture, singers_fixture):
+def test_cannot_add_singer_already_in_rotation(rotations_fixture, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -54,7 +59,7 @@ def test_cannot_add_singer_already_in_rotation(rotations_fixture, singers_fixtur
         rotations_fixture.add_singer(singers_fixture[2])
 
 
-def test_completing_performance_advances_queue_to_next_singer(rotations_fixture, singers_fixture):
+def test_completing_performance_advances_queue_to_next_singer(rotations_fixture, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -65,7 +70,7 @@ def test_completing_performance_advances_queue_to_next_singer(rotations_fixture,
     assert rotations_fixture.current_singer.singer_id == singers_fixture[2]
 
 
-def test_completing_performance_twice_advances_queue_2_singers(rotations_fixture, singers_fixture):
+def test_completing_performance_twice_advances_queue_2_singers(rotations_fixture, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -77,7 +82,7 @@ def test_completing_performance_twice_advances_queue_2_singers(rotations_fixture
     assert rotations_fixture.current_singer.singer_id == singers_fixture[3]
 
 
-def test_completing_performance_for_last_singer_returns_to_beginning_of_rotation(rotations_fixture: Rotations, singers_fixture):
+def test_completing_performance_for_last_singer_returns_to_beginning_of_rotation(rotations_fixture: Rotations, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -93,7 +98,7 @@ def test_completing_performance_for_last_singer_returns_to_beginning_of_rotation
     assert rotations_fixture.current_singer.singer_id == singers_fixture[1]
 
 
-def test_rotation_in_correct_state_after_removing_singer_after_current(rotations_fixture: Rotations, singers_fixture):
+def test_rotation_in_correct_state_after_removing_singer_after_current(rotations_fixture: Rotations, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -111,7 +116,7 @@ def test_rotation_in_correct_state_after_removing_singer_after_current(rotations
     assert rotations_fixture.queue.singers[2].singer_id == singers_fixture[4]
 
 
-def test_rotation_in_correct_state_after_removing_singer_before_current(rotations_fixture: Rotations, singers_fixture):
+def test_rotation_in_correct_state_after_removing_singer_before_current(rotations_fixture: Rotations, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -130,7 +135,7 @@ def test_rotation_in_correct_state_after_removing_singer_before_current(rotation
     assert rotations_fixture.queue.singers[2].singer_id == singers_fixture[4]
 
 
-def test_rotation_in_correct_state_after_removing_current_singer(rotations_fixture: Rotations, singers_fixture):
+def test_rotation_in_correct_state_after_removing_current_singer(rotations_fixture: Rotations, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -148,7 +153,7 @@ def test_rotation_in_correct_state_after_removing_current_singer(rotations_fixtu
     assert rotations_fixture.queue.singers[2].singer_id == singers_fixture[4]
 
 
-def test_rotation_in_correct_state_after_removing_current_and_last_singer(rotations_fixture: Rotations, singers_fixture):
+def test_rotation_in_correct_state_after_removing_current_and_last_singer(rotations_fixture: Rotations, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -168,7 +173,7 @@ def test_rotation_in_correct_state_after_removing_current_and_last_singer(rotati
     assert rotations_fixture.queue.singers[2].singer_id == singers_fixture[3]
 
 
-def test_cannot_remove_singer_that_is_not_in_rotation(rotations_fixture: Rotations, singers_fixture):
+def test_cannot_remove_singer_that_is_not_in_rotation(rotations_fixture: Rotations, singers_fixture, mock_crud):
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
 

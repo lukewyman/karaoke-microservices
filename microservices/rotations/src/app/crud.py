@@ -59,4 +59,9 @@ def create_queue(queue_data: QueueCreate):
 
 
 def get_queue(queue_id):
-    return QueueDB.get(queue_id)
+    queueDB = QueueDB.get(queue_id)
+
+    return Queue(queue_id=queueDB.queue_id,
+                 location_id=queueDB.location_id,
+                 event_date=queueDB.event_date,
+                 current_singer_index=queueDB.current_singer_index)
