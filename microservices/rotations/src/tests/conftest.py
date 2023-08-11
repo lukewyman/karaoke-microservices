@@ -1,9 +1,12 @@
 import uuid
 from datetime import datetime
 import pytest 
+from dotenv import load_dotenv
 from starlette.testclient import TestClient
 from app.domain import Queue, QueueCreate, EnqueuedSinger
 
+
+load_dotenv(".test.env")
 
 from app.main import app
 
