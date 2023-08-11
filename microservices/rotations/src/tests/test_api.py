@@ -33,34 +33,39 @@ def test_start_queue(test_app: TestClient):
     assert response.status_code == 201
 
 
-# @mock_dynamodb
-# def test_get_empty_queue(test_app: TestClient):
-#     _setup_queues_table()
-#     _populate_queues_table(QUEUES)
+@mock_dynamodb
+def test_get_empty_queue(test_app: TestClient):
+    _setup_queues_table()
+    _populate_queues_table(QUEUES)
 
-#     queue_id = QUEUES[0]['queue_id']  # json.dumps(QUEUES[0]['queue_id'])
-#     response = test_app.get(f'/queues/{queue_id}')
+    queue_id = QUEUES[0]['queue_id']  
+    response = test_app.get(f'/queues/{queue_id}')
 
-#     assert response.status_code == 200
-#     body = json.loads(response.content)
-#     assert body['queue_id'] == QUEUES[0]['queue_id']
-#     assert body['location_id'] == QUEUES[0]['location_id']
+    assert response.status_code == 200
+    body = json.loads(response.content)
+    assert body['queue_id'] == QUEUES[0]['queue_id']
+    assert body['location_id'] == QUEUES[0]['location_id']
 
 
-# @mock_dynamodb
-# def test_enqueue_singer(test_app: TestClient):
-#     _setup_queues_table()
-#     _populate_queues_table(QUEUES)
-#     _setup_enqueued_singers_table()
+@mock_dynamodb
+def test_enqueue_singer(test_app: TestClient):
+    _setup_queues_table()
+    _populate_queues_table(QUEUES)
+    _setup_enqueued_singers_table()
     
-#     singer_data = {
-#         'singer_id': '69400125-d093-41c1-9415-6af0168078f4'
-#     }
-#     queue_id = QUEUES[1]['queue_id']
+    singer_data = {
+        'singer_id': '69400125-d093-41c1-9415-6af0168078f4'
+    }
+    queue_id = QUEUES[1]['queue_id']
 
-#     response = test_app.post(f'/queues/{queue_id}/singers/', 
-#                              content=json.dumps(singer_data))
+    response = test_app.post(f'/queues/{queue_id}/singers/', 
+                             content=json.dumps(singer_data))
     
-#     assert response.status_code == 201 
-#     body = json.loads(response.content)
+    assert response.status_code == 201 
+    body = json.loads(response.content)
+    assert body['queue_id'] == queue_id
+    assert len(body['singers']) == 1
+    assert body['singers'][0]['singer_id'] == '69400125-d093-41c1-9415-6af0168078f4'
+    assert body['singers'][0]['position'] == 1
     
+

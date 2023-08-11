@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 import pytest 
 from starlette.testclient import TestClient
-from app.domain import Queue, QueueCreate
+from app.domain import Queue, QueueCreate, EnqueuedSinger
 
 
 from app.main import app
@@ -22,7 +22,14 @@ def mock_crud(monkeypatch):
                            enqueued_singer_id: uuid.UUID, 
                            queue_position: int):
 
+        return EnqueuedSinger(singer_id=singer_id,
+                              enqueued_singer_id=enqueued_singer_id,
+                              position=queue_position)
+    
+    
+    def mock_create_queue(queue_data: QueueCreate):
         return None
     
 
+    monkeypatch.setattr('app.rotations.create_queue', mock_create_queue)
     monkeypatch.setattr('app.rotations.create_enqueued_singer', mock_create_enqueued_singer)

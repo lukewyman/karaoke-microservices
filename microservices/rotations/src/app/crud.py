@@ -1,7 +1,7 @@
 from datetime import datetime
 import uuid
 from .models import QueueDB, EnqueuedSingerDB, SongChoiceDB
-from .domain import QueueCreate, Queue
+from .domain import QueueCreate, Queue, EnqueuedSinger
 
 
 def create_song_choice(enqueued_singer_id: uuid.UUID, 
@@ -29,12 +29,16 @@ def create_enqueued_singer(queue_id: uuid.UUID,
                            enqueued_singer_id: uuid.UUID, 
                            queue_position: int):
         
-    enqueued_singer = EnqueuedSingerDB(queue_id=str(queue_id), 
+    enqueued_singer_db = EnqueuedSingerDB(queue_id=str(queue_id), 
                                      singer_id=str(singer_id), 
                                      enqueued_singer_id=str(enqueued_singer_id), 
                                      queue_position=queue_position)
     
-    return enqueued_singer.save()
+    enqueued_singer_db.save()
+    
+    return EnqueuedSinger(singer_id=enqueued_singer_db.singer_id,
+                          enqueued_singer_id=enqueued_singer_db.enqueued_singer_id,
+                          position=enqueued_singer_db.queue_position)
 
 
 def _get_enqueued_singers(queue_id: uuid.UUID):

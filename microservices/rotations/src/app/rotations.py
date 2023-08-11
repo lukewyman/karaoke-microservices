@@ -1,13 +1,27 @@
 import uuid
-from .domain import Queue, EnqueuedSinger
+from .domain import Queue, QueueCreate, EnqueuedSinger
 from .crud import (
-    create_enqueued_singer
+    create_enqueued_singer,
+    create_queue,
+    get_queue
 )
 
 class Rotations:
 
     def __init__(self, queue: Queue) -> None:
         self.queue = queue
+
+
+    @classmethod
+    def new(self, queue_create: QueueCreate):
+        queue = create_queue(queue_create)
+        return Rotations(queue=queue)
+    
+
+    @classmethod
+    def from_db(self, queue_id: uuid.UUID):
+        queue = get_queue(queue_id=queue_id)
+        return Rotations(queue=queue)
 
 
     @property
@@ -29,18 +43,15 @@ class Rotations:
     def add_singer(self, singer_id: uuid.UUID):
         if self._get_singer_index(singer_id) > -1:
             raise ValueError(f'Singer with id {singer_id} already in the queue.')
-                
-        enqueued_singer = EnqueuedSinger(enqueued_singer_id=uuid.uuid4(),
-                                         singer_id=singer_id,
-                                         position=len(self.queue.singers) + 1)
-        self.queue.singers.append(enqueued_singer)
+        
+        position = len(self.queue.singers) + 1
 
-        create_enqueued_singer(queue_id=self.queue.queue_id,
+        enqueued_singer = create_enqueued_singer(queue_id=self.queue.queue_id,
                                     singer_id=singer_id,
-                                    enqueued_singer_id=enqueued_singer.enqueued_singer_id,
-                                    queue_position=enqueued_singer.position)
-
-        return enqueued_singer
+                                    enqueued_singer_id=uuid.uuid4(),
+                                    queue_position=position)
+        
+        self.queue.singers.append(enqueued_singer)
     
 
     def complete_performance(self):

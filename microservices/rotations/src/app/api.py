@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from .domain import Queue, QueueCreate, EnqueuedSinger, EnqueuedSingerCreate
 from .rotations import Rotations
-from . import crud
 
 
 router = APIRouter()
@@ -17,26 +16,25 @@ async def health_check():
 
 @router.post('/queues/', response_description='Start a queue', response_model=Queue)
 def create_queue(queue_data: QueueCreate=Body(...)):
-    queue = crud.create_queue(queue_data=queue_data)
+    queue = Rotations.new(queue_data).queue 
 
     return JSONResponse(status_code=201, content=jsonable_encoder(queue))
 
 
-# @router.get('/queues/{queue_id}', response_description='Get a queue by id', response_class=Queue)
-# def get_queue(queue_id):
-#     queue = crud.get_queue(queue_id=queue_id)
-#     if (queue := crud.get_queue(queue_id=queue_id)) is not None:
-#         return JSONResponse(status_code=200, content=jsonable_encoder(queue))
+@router.get('/queues/{queue_id}', response_description='Get a queue by id', response_class=Queue)
+def get_queue(queue_id):
+    queue = Rotations.from_db(queue_id).queue
+    if queue is not None:
+        return JSONResponse(status_code=200, content=jsonable_encoder(queue))
     
-#     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-#                         detail=f'Queue with id {queue_id} not found.')
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                        detail=f'Queue with id {queue_id} not found.')
 
 
-# @router.post('/queues/{queue_id}/singers/', 
-#              response_description='Add singer to queue', response_class=Queue)
-# def enqueue_singer(queue_id, singer_data: EnqueuedSingerCreate=Body(...)):
-#     if (queue := crud.get_queue(queue_id=queue_id)) is not None:
-#         rotations = Rotations(queue=queue)
-#         rotations.add_singer(singer_id=singer_data.singer_id)
-#         crud.update_queue(rotations.queue)
-#         return JSONResponse(status_code=)
+@router.post('/queues/{queue_id}/singers/', 
+             response_description='Add singer to queue', response_class=Queue)
+def enqueue_singer(queue_id, singer_data: EnqueuedSingerCreate=Body(...)):
+    rotations = Rotations.from_db(queue_id)
+    rotations.add_singer(singer_data.singer_id)
+
+    return JSONResponse(status_code=201, content=jsonable_encoder(rotations.queue))
