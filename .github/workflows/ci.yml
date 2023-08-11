@@ -12,8 +12,7 @@ jobs:
     name: "Test, Build & Push"
     strategy: 
       matrix:
-        microservice: [{name: song-library, dir: song_library}, 
-                        {name: singers, dir: singers}]
+        microservice: [{name: rotations, dir: rotations}]
     runs-on: ubuntu-22.04
     permissions:
       id-token: write 
