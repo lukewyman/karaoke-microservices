@@ -2,17 +2,13 @@ name: Continuous Integration
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-  pull_request:
 
 jobs:
   test_build_and_push:
     name: "Test, Build & Push"
     strategy: 
       matrix:
-        microservice: [{name: rotations, dir: rotations}]
+        microservice: [{name: song-library, dir: song_library}, {name: singers, dir: singers}]
     runs-on: ubuntu-22.04
     permissions:
       id-token: write 
@@ -25,7 +21,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::919980474747:role/github-actions
-          aws-region: us-west-2 
+          aws-region: us-east-1
 
       - name: Setup Python 3.10 
         id: python_setup 
