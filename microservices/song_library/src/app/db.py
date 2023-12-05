@@ -9,17 +9,17 @@ logger.setLevel(logging.INFO)
 
 
 def get_db():
-    docdb_endpoint = os.environ['DOCDB_ENDPOINT']
-    docdb_port     = os.environ['DOCDB_PORT']
-    docdb_username = os.environ['DOCDB_USERNAME']
-    docdb_password = os.environ['DOCDB_PASSWORD']
-    docdb_suffix   = '/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false'
-    if docdb_endpoint == 'mongo':
-        docdb_suffix = ''
+    mongo_hostname = os.environ['MONGO_HOSTNAME']
+    mongo_port = os.environ['MONGO_PORT']
+    mongo_username = os.environ['MONGO_USERNAME']
+    mongo_password = os.environ['MONGO_PASSWORD']
+    mongo_architecture = os.environ.get('MONGO_ARCHITECTURE', 'standalone')
+    mongo_querystring   = '/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false'
+    if mongo_architecture == 'standalone':
+        mongo_querystring = ''
 
-    docdb_url = f'mongodb://{docdb_username}:{docdb_password}@{docdb_endpoint}:{docdb_port}{docdb_suffix}'
-
-    client = motor.motor_asyncio.AsyncIOMotorClient(docdb_url)
+    mongo_url = f'mongodb://{mongo_username}:{mongo_password}@{mongo_hostname}:{mongo_port}{mongo_querystring}'
+    client = motor.motor_asyncio.AsyncIOMotorClient(mongo_url)
     return client['karaoke']
 
 
