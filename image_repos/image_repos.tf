@@ -26,7 +26,7 @@ terraform {
     organization = "spikes"
 
     workspaces {
-      prefix = "karaoke-app-image-repos-"
+      prefix = "karaoke-image-"
     }
   }
 }

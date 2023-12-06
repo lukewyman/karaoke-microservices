@@ -52,7 +52,7 @@ jobs:
         working-directory: ./microservices/${{ matrix.microservice.dir }}/src
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-          ECR_REPOSITORY: karaoke-app-image-repos-dev-${{ matrix.microservice.name }}
+          ECR_REPOSITORY: karaoke-image-dev-${{ matrix.microservice.name }}
           IMAGE_TAG: v1
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
