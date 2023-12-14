@@ -18,16 +18,3 @@ class Singer(Base):
     first_name = Column(String)
     last_name = Column(String)
     stage_name = Column(String)
-
-    favorites = relationship("Favorite", back_populates="singer")
-
-
-class Favorite(Base):
-    __tablename__ = "favorites"
-
-    id = Column(Integer, primary_key=True, index=True)
-    song_id = Column(String)
-    position = Column(Integer)
-    singer_id = Column(postgresql.UUID(as_uuid=True), ForeignKey("singers.id"))
-
-    singer = relationship("Singer", back_populates="favorites")

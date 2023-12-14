@@ -9,7 +9,7 @@ variable "repository_names" {
 resource "aws_ecr_repository" "image_repo" {
   for_each = toset(var.repository_names)
 
-  name = "${terraform.workspace}-${each.key}"
+  name = "karaoke-image-${terraform.workspace}-${each.key}"
 }
 
 terraform {
