@@ -4,10 +4,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from . import db
 from .models import Song, SongData
-
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+from .logger import logger
 
 
 router = APIRouter()
@@ -27,6 +24,7 @@ async def get_songs():
 @router.get('/songs/{song_id}', response_description='Get a Song', response_model=Song)
 async def get_song(song_id):
     if (song := await db.get_song_db(song_id)) is not None:
+        logger.info(f'Found song with id {song_id} with metadata {song}')
         return JSONResponse(status_code=status.HTTP_200_OK, content=song)
     
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

@@ -69,3 +69,14 @@ def test_enqueue_singer(test_app: TestClient):
     assert body['singers'][0]['position'] == 1
     
 
+@mock_dynamodb
+def test_get_singer(test_app: TestClient):
+    _setup_queues_table()
+    _populate_queues_table(QUEUES)
+    _setup_enqueued_singers_table()
+    _populate_enqueued_singers_table(ENQUEUED_SINGERS)
+
+
+@mock_dynamodb
+def test_remove_singer(test_app: TestClient):
+    pass 

@@ -6,13 +6,13 @@ from sqlalchemy.orm import Session
 
 from . import crud, models, schemas 
 from .database import SessionLocal, engine 
-
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+from .logger import logger
+from .middleware import log_middleware
+from starlette.middleware.base import BaseHTTPMiddleware
 
 app = FastAPI()
-
+app.add_middleware(BaseHTTPMiddleware, dispatch=log_middleware)
+logger.info('Starting singers API...')
 
 def get_db():
     db = SessionLocal()

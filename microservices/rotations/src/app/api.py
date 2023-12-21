@@ -38,3 +38,16 @@ def enqueue_singer(queue_id, singer_data: EnqueuedSingerCreate=Body(...)):
     rotations.add_singer(singer_data.singer_id)
 
     return JSONResponse(status_code=201, content=jsonable_encoder(rotations.queue))
+
+
+@router.get('/queues/{queue_id}/singers/{enqueued_singer_id}')
+def get_singer(queue_id, enqueued_singer_id):
+    pass
+
+
+@router.delete('/queues/{queue_id}/singers/{enqueued_singer_id}',
+               response_description='Remove singer from queue', response_class=Queue)
+def remove_singer(queue_id, singer_id):
+    pass 
+
+
