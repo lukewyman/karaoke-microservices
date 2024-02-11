@@ -3,7 +3,16 @@ from datetime import datetime
 from app.domain import Queue
 from app.rotations import Rotations
 import pytest
-
+from moto import mock_dynamodb
+from .data import (
+    SONG_CHOICES, 
+    ENQUEUED_SINGERS,
+    _setup_queues_table,
+    _setup_song_choices_table,
+    _setup_enqueued_singers_table,
+    _populate_song_choices_table,
+    _populate_enqueued_singers_table
+)
 
 @pytest.fixture(scope='function')
 def rotations_fixture() -> Rotations:
@@ -98,7 +107,10 @@ def test_completing_performance_for_last_singer_returns_to_beginning_of_rotation
     assert rotations_fixture.current_singer.singer_id == singers_fixture[1]
 
 
+@mock_dynamodb
 def test_rotation_in_correct_state_after_removing_singer_after_current(rotations_fixture: Rotations, singers_fixture, mock_crud):
+    _setup_enqueued_singers_table()
+        
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -116,7 +128,10 @@ def test_rotation_in_correct_state_after_removing_singer_after_current(rotations
     assert rotations_fixture.queue.singers[2].singer_id == singers_fixture[4]
 
 
+@mock_dynamodb
 def test_rotation_in_correct_state_after_removing_singer_before_current(rotations_fixture: Rotations, singers_fixture, mock_crud):
+    _setup_enqueued_singers_table()
+    
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -135,7 +150,10 @@ def test_rotation_in_correct_state_after_removing_singer_before_current(rotation
     assert rotations_fixture.queue.singers[2].singer_id == singers_fixture[4]
 
 
+@mock_dynamodb
 def test_rotation_in_correct_state_after_removing_current_singer(rotations_fixture: Rotations, singers_fixture, mock_crud):
+    _setup_enqueued_singers_table()
+    
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])
@@ -153,7 +171,10 @@ def test_rotation_in_correct_state_after_removing_current_singer(rotations_fixtu
     assert rotations_fixture.queue.singers[2].singer_id == singers_fixture[4]
 
 
+@mock_dynamodb
 def test_rotation_in_correct_state_after_removing_current_and_last_singer(rotations_fixture: Rotations, singers_fixture, mock_crud):
+    _setup_enqueued_singers_table()
+    
     rotations_fixture.add_singer(singers_fixture[1])
     rotations_fixture.add_singer(singers_fixture[2])
     rotations_fixture.add_singer(singers_fixture[3])

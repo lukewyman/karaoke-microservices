@@ -3,7 +3,9 @@ from .domain import Queue, QueueCreate, EnqueuedSinger
 from .crud import (
     create_enqueued_singer,
     create_queue,
-    get_queue
+    delete_enqueued_singer,
+    get_queue,
+    update_enqueued_singers
 )
 
 class Rotations:
@@ -72,4 +74,6 @@ class Rotations:
             self._get_singer_index(singer_id) == len(self.queue.singers) - 1):
             self.queue.current_singer_index = 0
 
+        delete_enqueued_singer(self.queue.queue_id, len(self.queue.singers))
         self.queue.singers = [s for s in self.queue.singers if s.singer_id != singer_id]
+        # update_enqueued_singers(self.queue.singers)

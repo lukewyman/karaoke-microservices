@@ -40,8 +40,8 @@ def enqueue_singer(queue_id, singer_data: EnqueuedSingerCreate=Body(...)):
     return JSONResponse(status_code=201, content=jsonable_encoder(rotations.queue))
 
 
-@router.get('/queues/{queue_id}/singers/{enqueued_singer_id}')
-def get_singer(queue_id, enqueued_singer_id):
+@router.get('/queues/{queue_id}/singers/{position_id}')
+def get_singer(queue_id, position_id):
     pass
 
 

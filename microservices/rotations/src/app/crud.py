@@ -15,11 +15,11 @@ def create_song_choice(enqueued_singer_id: uuid.UUID,
     return song_choice.save()
 
 
-def _get_song_choices(enqueued_singer_id: uuid.UUID):
+def get_song_choices(enqueued_singer_id: uuid.UUID):
     return SongChoiceDB.query(enqueued_singer_id)
 
 
-def _update_song_choices(choices: list[SongChoiceDB]):    
+def update_song_choices(choices: list[SongChoiceDB]):    
     for choice in choices:
         choice.save()
 
@@ -41,14 +41,17 @@ def create_enqueued_singer(queue_id: uuid.UUID,
                           position=enqueued_singer_db.queue_position)
 
 
-def _get_enqueued_singers(queue_id: uuid.UUID):
+def get_enqueued_singers(queue_id: uuid.UUID):
     return EnqueuedSingerDB.query(queue_id)
 
 
-def _update_enqueued_singers(singers: list[EnqueuedSingerDB]):
+def update_enqueued_singers(singers: list[EnqueuedSingerDB]):
     for singer in singers:
         singer.save()
 
+def delete_enqueued_singer(queue_id: uuid.UUID, position: int):
+    singer = EnqueuedSingerDB(str(queue_id), position)
+    singer.delete()
 
 def create_queue(queue_data: QueueCreate):
     queueDB = QueueDB(queue_id=str(uuid.uuid4()), 
