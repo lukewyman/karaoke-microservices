@@ -37,6 +37,7 @@ def test_start_queue(test_app: TestClient):
 def test_get_empty_queue(test_app: TestClient):
     _setup_queues_table()
     _populate_queues_table(QUEUES)
+    _setup_enqueued_singers_table()
 
     queue_id = QUEUES[0]['queue_id']  
     response = test_app.get(f'/queues/{queue_id}')

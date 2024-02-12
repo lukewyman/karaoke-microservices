@@ -5,8 +5,10 @@ from .crud import (
     create_queue,
     delete_enqueued_singer,
     get_queue,
+    get_enqueued_singers,
     update_enqueued_singers
 )
+from .mappers import to_enqueued_singer_dbs, to_enqueued_singers
 
 class Rotations:
 
@@ -23,6 +25,7 @@ class Rotations:
     @classmethod
     def from_db(self, queue_id: uuid.UUID):
         queue = get_queue(queue_id=queue_id)
+        queue.singers = to_enqueued_singers(get_enqueued_singers(queue_id))
         return Rotations(queue=queue)
 
 
@@ -76,4 +79,4 @@ class Rotations:
 
         delete_enqueued_singer(self.queue.queue_id, len(self.queue.singers))
         self.queue.singers = [s for s in self.queue.singers if s.singer_id != singer_id]
-        # update_enqueued_singers(self.queue.singers)
+        update_enqueued_singers(to_enqueued_singer_dbs(self.queue.queue_id, self.queue.singers))
