@@ -42,7 +42,7 @@ def create_enqueued_singer(queue_id: uuid.UUID,
 
 
 def get_enqueued_singers(queue_id: uuid.UUID):
-    return EnqueuedSingerDB.query(queue_id)
+    return EnqueuedSingerDB.query(str(queue_id))
 
 
 def update_enqueued_singers(singers: list[EnqueuedSingerDB]):
@@ -66,9 +66,13 @@ def create_queue(queue_data: QueueCreate):
 
 
 def get_queue(queue_id):
-    queueDB = QueueDB.get(queue_id)
+    queueDB = QueueDB.get(str(queue_id))
 
     return Queue(queue_id=queueDB.queue_id,
                  location_id=queueDB.location_id,
                  event_date=queueDB.event_date,
                  current_singer_index=queueDB.current_singer_index)
+
+
+def update_queue(queueDB: QueueDB):
+    queueDB.save()

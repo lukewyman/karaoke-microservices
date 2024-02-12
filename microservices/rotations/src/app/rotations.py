@@ -6,9 +6,12 @@ from .crud import (
     delete_enqueued_singer,
     get_queue,
     get_enqueued_singers,
-    update_enqueued_singers
+    update_enqueued_singers,
+    update_queue
 )
-from .mappers import to_enqueued_singer_dbs, to_enqueued_singers
+from .mappers import (to_enqueued_singer_dbs, 
+                      to_enqueued_singers, 
+                      to_queue_db)
 
 class Rotations:
 
@@ -43,7 +46,7 @@ class Rotations:
                 return i
             
         return -1
-    
+        
     
     def add_singer(self, singer_id: uuid.UUID):
         if self._get_singer_index(singer_id) > -1:
@@ -65,6 +68,8 @@ class Rotations:
         else:
             self.queue.current_singer_index += 1
 
+        update_queue(to_queue_db(self.queue))
+
 
     def remove_singer(self, singer_id: uuid.UUID):
         if self._get_singer_index(singer_id) < 0:
@@ -77,6 +82,13 @@ class Rotations:
             self._get_singer_index(singer_id) == len(self.queue.singers) - 1):
             self.queue.current_singer_index = 0
 
+        for singer in self.queue.singers:
+            if self._get_singer_index(singer.singer_id) > self._get_singer_index(singer_id):
+                singer.position -= 1 
+
+        update_queue(to_queue_db(self.queue))
         delete_enqueued_singer(self.queue.queue_id, len(self.queue.singers))
         self.queue.singers = [s for s in self.queue.singers if s.singer_id != singer_id]
+        
         update_enqueued_singers(to_enqueued_singer_dbs(self.queue.queue_id, self.queue.singers))
+        

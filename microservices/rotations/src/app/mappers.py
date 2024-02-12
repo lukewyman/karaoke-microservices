@@ -22,3 +22,10 @@ def to_enqueued_singer_db(queue_id: uuid.UUID, enqueued_singer: EnqueuedSinger):
 
 def to_enqueued_singer_dbs(queue_id: uuid.UUID, enqueued_singers: EnqueuedSinger):
     return [to_enqueued_singer_db(queue_id, es) for es in enqueued_singers]
+
+
+def to_queue_db(queue: Queue):
+    return QueueDB(str(queue.queue_id),
+                   location_id = str(queue.location_id),
+                   event_date = queue.event_date,
+                   current_singer_index = queue.current_singer_index)
