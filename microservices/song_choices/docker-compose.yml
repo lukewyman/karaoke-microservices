@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./src
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8080
+    volumes:
+      - ./src/:/usr/src/app/
+    ports:
+      - 8084:8080
+    environment:
+      - SONG_CHOICES_TABLE_NAME=karaoke-app-local-dev-enqueued-singers
+      - AWS_ACCESS_KEY_ID=${HOST_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${HOST_AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=us-east-1
