@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: song-library
+  name: song-library
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: song-library
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: song-library
+    spec:
+      containers:
+      - image: song-library
+        name: song-library
+        command: 
+        - /bin/sh
+        - -c
+        - 'uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8080'
+        env:
+        - name: MONGO_HOSTNAME
+          value: mongo-mongodb
+        - name: MONGO_PORT
+          value: "27017"
+        - name: MONGO_USERNAME
+          value: admin
+        - name: MONGO_PASSWORD
+          value: p@ssw0RD123
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: song-library
+spec:
+  selector:
+    app: song-library
+  ports:
+  - port: 5000
+    targetPort: 8080
+
+
