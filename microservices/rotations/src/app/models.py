@@ -31,17 +31,17 @@ class EnqueuedSingerDB(Model):
 
     queue_id = UnicodeAttribute(hash_key=True)
     singer_id = UnicodeAttribute()
-    enqueued_singer_id = UnicodeAttribute()
+    # enqueued_singer_id = UnicodeAttribute()
     queue_position = NumberAttribute(range_key=True)
 
 
-class SongChoiceDB(Model):
-    class Meta:
-        table_name = SONG_CHOICES_TABLE_NAME
-        region = AWS_REGION
+# class SongChoiceDB(Model):
+#     class Meta:
+#         table_name = SONG_CHOICES_TABLE_NAME
+#         region = AWS_REGION
 
-    enqueued_singer_id = UnicodeAttribute(hash_key=True)
-    song_id = UnicodeAttribute()
-    position = NumberAttribute(range_key=True)
+#     enqueued_singer_id = UnicodeAttribute(hash_key=True)
+#     song_id = UnicodeAttribute()
+#     position = NumberAttribute(range_key=True)
 
     

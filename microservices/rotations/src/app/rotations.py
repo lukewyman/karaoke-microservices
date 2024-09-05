@@ -56,7 +56,6 @@ class Rotations:
 
         enqueued_singer = create_enqueued_singer(queue_id=self.queue.queue_id,
                                     singer_id=singer_id,
-                                    enqueued_singer_id=uuid.uuid4(),
                                     queue_position=position)
         
         self.queue.singers.append(enqueued_singer)

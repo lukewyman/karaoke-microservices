@@ -5,12 +5,9 @@ from app.rotations import Rotations
 import pytest
 from moto import mock_dynamodb
 from .data import (
-    SONG_CHOICES, 
     ENQUEUED_SINGERS,
     _setup_queues_table,
-    _setup_song_choices_table,
     _setup_enqueued_singers_table,
-    _populate_song_choices_table,
     _populate_enqueued_singers_table
 )
 

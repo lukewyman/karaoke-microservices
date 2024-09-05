@@ -9,9 +9,8 @@ from .data import (
     _setup_enqueued_singers_table,
     _populate_enqueued_singers_table,
     QUEUES, 
-    ENQUEUED_SINGERS,
-    SONG_CHOICES
-    )
+    ENQUEUED_SINGERS
+)
 
 
 def test_health_check(test_app: TestClient):

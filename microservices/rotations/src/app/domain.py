@@ -12,7 +12,6 @@ class EnqueuedSingerCreate(EnqueuedSingerBase):
 
 
 class EnqueuedSinger(EnqueuedSingerBase):
-    enqueued_singer_id: uuid.UUID
     position: int
 
 
