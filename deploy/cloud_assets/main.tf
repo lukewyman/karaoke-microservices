@@ -3,7 +3,7 @@
 ###################
 
 resource "aws_dynamodb_table" "queues" {
-    name = "${terraform.workspace}-queues"
+    name = "${local.app_prefix}-queues"
     billing_mode = "PAY_PER_REQUEST"
     hash_key = "queue_id"
 
@@ -14,7 +14,7 @@ resource "aws_dynamodb_table" "queues" {
 }
 
 resource "aws_dynamodb_table" "enqueued_singers" {
-    name = "${terraform.workspace}-enqueued-singers"
+    name = "${local.app_prefix}-enqueued-singers"
     billing_mode = "PAY_PER_REQUEST"
     hash_key = "queue_id"
     range_key = "queue_position"
@@ -31,7 +31,7 @@ resource "aws_dynamodb_table" "enqueued_singers" {
 }
 
 resource "aws_dynamodb_table" "song_choices" {
-    name = "${terraform.workspace}-song-choices"
+    name = "${local.app_prefix}-song-choices"
     billing_mode = "PAY_PER_REQUEST"
     hash_key = "enqueued_singer_id"
     range_key = "position"

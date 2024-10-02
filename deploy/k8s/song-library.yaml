@@ -33,16 +33,21 @@ spec:
           value: p@ssw0RD123
         ports:
         - containerPort: 8080
+        resources: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app: song-library
   name: song-library
 spec:
+  ports:
+  - name: 5001-8080
+    nodePort: 32101
+    port: 5001
+    protocol: TCP
+    targetPort: 8080
   selector:
     app: song-library
-  ports:
-  - port: 5000
-    targetPort: 8080
-
-
+  type: NodePort

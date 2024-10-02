@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: song-choices-tests
+spec:
+  template:
+    spec:
+      containers:
+      - command:
+        - pytest
+        image: song-choices
+        name: song-choices-tests
+        env:
+        - name: AWS_REGION
+          value: us-west-2
+        - name: SONG_CHOICES_TABLE_NAME
+          value: karaoke-app-local-dev-song-choices
+        resources: {}
+      restartPolicy: Never

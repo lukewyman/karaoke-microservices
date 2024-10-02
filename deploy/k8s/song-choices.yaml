@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: song-choices
+  name: song-choices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: song-choices
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: song-choices
+    spec:
+      containers:
+      - image: song-choices
+        name: song-choices
+        command: 
+        - /bin/sh
+        - -c
+        - 'uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8080'
+        env:
+        - name: AWS_REGION
+          value: us-west-2
+        - name: SONG_CHOICES_TABLE_NAME
+          value: karaoke-app-local-dev-song-choices
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: song-choices
+  name: song-choices
+spec:
+  ports:
+  - name: 5003-8080
+    nodePort: 32104
+    port: 5004
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: song-choices
+  type: NodePort
+

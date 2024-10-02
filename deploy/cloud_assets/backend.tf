@@ -7,12 +7,5 @@ terraform {
     }
   }
 
-  backend "remote" {
-    hostname     = "app.terraform.io"
-    organization = "spikes"
-
-    workspaces {
-      name = "karaoke-app-local-dev"
-    }
-  }
+  backend "local" {}
 }

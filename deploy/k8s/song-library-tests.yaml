@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: song-library-tests
+spec:
+  template:
+    spec:
+      containers:
+      - command:
+        - pytest
+        image: song-library
+        name: song-library-tests
+        resources: {}
+      restartPolicy: Never

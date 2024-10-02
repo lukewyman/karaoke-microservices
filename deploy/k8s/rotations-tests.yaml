@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rotations-tests
+spec:
+  template:
+    spec:
+      containers:
+      - command:
+        - pytest
+        image: rotations
+        name: rotations-tests
+        env:
+        - name: AWS_REGION
+          value: us-west-2
+        - name: QUEUES_TABLE_NAME
+          value: karaoke-app-local-dev-queues
+        - name: ENQUEUED_SINGERS_TABLE_NAME
+          value: karaoke-app-local-dev-enqueued-singers
+        resources: {}
+      restartPolicy: Never
