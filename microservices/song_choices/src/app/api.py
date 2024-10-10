@@ -15,8 +15,8 @@ async def health_check():
     return JSONResponse(status_code=200, content='OK')
 
 
-@router.post('/queues/{queue_id}/singers/{singer_id}')
-def add_song_choice(queue_id, singer_id, song_choice_data: SongChoiceCreate=Body(...), response_model=SongChoice):
+@router.post('/queues/{queue_id}/singers/{singer_id}', response_model=SongChoice)
+def add_song_choice(queue_id, singer_id, song_choice_data: SongChoiceCreate=Body(...)):
     song_choices = crud.get_song_choices(queue_id=queue_id, singer_id=singer_id)
     song_choice = song_sorter.new_song_choice(song_choices=song_choices, 
                                   queue_id=queue_id, 
@@ -27,14 +27,14 @@ def add_song_choice(queue_id, singer_id, song_choice_data: SongChoiceCreate=Body
     return JSONResponse(status_code=201, content=jsonable_encoder(song_choice))
 
 
-@router.get('/queues/{queue_id}/singers/{singer_id}')
-def get_song_choices(queue_id, singer_id) -> list[SongChoice]:
+@router.get('/queues/{queue_id}/singers/{singer_id}', response_model=list[SongChoice])
+def get_song_choices(queue_id, singer_id):
     song_choices = crud.get_song_choices(queue_id=queue_id, singer_id=singer_id)
 
     return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(song_choices))
 
 
-@router.get('/queues/{queue_id}/singers/{singer_id}/songs/next')
+@router.get('/queues/{queue_id}/singers/{singer_id}/songs/next', response_model=SongChoice)
 def get_next_choice(queue_id, singer_id):
     song_choices = crud.get_song_choices(queue_id=queue_id, singer_id=singer_id)
     if len(song_choices) == 0:

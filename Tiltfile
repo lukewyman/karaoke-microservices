@@ -4,7 +4,7 @@ load('ext://helm_resource', 'helm_resource', 'helm_repo')
 helm_repo('bitnami', 'https://charts.bitnami.com/bitnami')
 
 
-############ SONG LIBRARY ############
+############ SONG LIBRARY (port 32101) ############
 # Microservice
 docker_build('song-library', './microservices/song_library/src')
 k8s_yaml('./deploy/k8s/song-library.yaml')
