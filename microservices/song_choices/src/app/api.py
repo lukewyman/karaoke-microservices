@@ -5,6 +5,8 @@ from fastapi.encoders import jsonable_encoder
 from .domain import SongChoiceCreate, SongChoice, SongChoiceUpdate
 from . import crud
 from . import song_sorter as song_sorter
+from . import service as song_service
+from .mappers import to_song_choice_view
 
 
 router = APIRouter()
@@ -42,6 +44,8 @@ def get_next_choice(queue_id, singer_id):
                             detail='Next song for queue {queue_id} and singer {singer_id} not found.')
 
     next = song_sorter.next_song_choice(song_choices=song_choices)
+    song_details = song_service.get_song(next.song_id)
+    next = to_song_choice_view(next, song_details)
     return JSONResponse(status_code=200, content=jsonable_encoder(next))
 
 

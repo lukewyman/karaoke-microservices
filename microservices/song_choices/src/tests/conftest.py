@@ -1,4 +1,5 @@
 import pytest
+import requests
 from starlette.testclient import TestClient
 
 from app.main import app
@@ -8,3 +9,6 @@ from app.main import app
 def test_app():
     client = TestClient(app)
     yield client
+
+
+    

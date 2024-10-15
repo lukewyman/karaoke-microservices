@@ -12,3 +12,7 @@ class SongChoice(SongChoiceCreate):
 
 class SongChoiceUpdate(BaseModel):
     new_position: int
+
+class SongChoiceView(SongChoice):
+    song_title: str 
+    artist: str 

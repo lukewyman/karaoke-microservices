@@ -2,7 +2,9 @@ import json
 import uuid
 from starlette.testclient import TestClient
 from moto import mock_dynamodb
+import requests
 from app.models import SongChoiceDB
+from .mock_song import MockSong
 from .data import (
     _setup_song_choices_table,
     _populate_song_choices_table,
@@ -18,7 +20,7 @@ def test_health_check(test_app: TestClient):
 
 
 @mock_dynamodb
-def test_get_song_choices(test_app: TestClient):
+def test_get_song_choices(test_app: TestClient, monkeypatch):
     _setup_song_choices_table()
     _populate_song_choices_table(SONG_CHOICES)
 
@@ -62,17 +64,31 @@ def test_add_song_choice(test_app: TestClient):
 
 
 @mock_dynamodb
-def test_get_next_choice(test_app: TestClient):
+def test_get_next_choice(test_app: TestClient, monkeypatch):
     _setup_song_choices_table()
     _populate_song_choices_table(SONG_CHOICES)
 
     queue_id, singer_id = SONG_CHOICES[0]['enqueued_singer_id'].split(':')
+    song_id = SONG_CHOICES[0]['song_id']
+
+    def mock_get(*args, **kwargs):
+        return MockSong(200, {"id": song_id,
+                              "song_title": "song-title-1",
+                              "artist": "artist-1"
+                              })
+    
+    monkeypatch.setattr(requests, "get", mock_get)
+
     response = test_app.get(f'/queues/{queue_id}/singers/{singer_id}/songs/next')
 
     assert response.status_code == 200
     body = json.loads(response.content)
-    assert body['song_id'] == SONG_CHOICES[0]['song_id']
+    assert body['song_id'] == song_id
+    assert body['queue_id'] == queue_id
+    assert body['singer_id'] == singer_id
     assert body['position'] == 1
+    assert body['song_title'] == 'song-title-1'
+    assert body['artist'] == 'artist-1'
     
 
 @mock_dynamodb

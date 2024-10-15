@@ -27,6 +27,8 @@ spec:
           value: us-west-2
         - name: SONG_CHOICES_TABLE_NAME
           value: karaoke-app-local-dev-song-choices
+        - name: SONG_LIBRARY_SERVICE
+          value: song-library
         resources: {}
 ---
 apiVersion: v1
