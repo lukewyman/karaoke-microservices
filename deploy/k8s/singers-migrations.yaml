@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: singers-migrations
+spec:
+  template:
+    spec:
+      # initContainers:
+      # - name: chech-db
+      #   image: postgresql
+      #   command:
+      #   - /bin/sh
+      #   - -c
+      #   - ''
+      #   env:
+      #   - name: DB_HOST
+      #     value: postgres-postgresql
+      #   - name: DB_NAME
+      #     value: postgres
+      #   - name: DB_PASS
+      #     value: postgres
+      #   - name: DB_PORT
+      #     value: "5432"
+      #   - name: DB_USER
+      #     value: postgres
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - 'cd app; alembic upgrade head;'
+        image: singers-migrations
+        name: singers-migrations
+        env:
+        - name: DB_HOST
+          value: postgres-postgresql
+        - name: DB_NAME
+          value: postgres
+        - name: DB_PASS
+          value: postgres
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          value: postgres
+        resources: {}
+      restartPolicy: Never

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: singers-migrations
+  name: singers-migrations
+spec:
+  containers:
+  - image: singers-migrations
+    name: singers-migrations
+    command: 
+    - /bin/sh
+    - -c
+    - 'while sleep 2; do echo thinking; done'
+    env:
+    - name: DB_HOST
+      value: postgres-postgresql
+    - name: DB_NAME
+      value: postgres
+    - name: DB_PASS
+      value: postgres
+    - name: DB_PORT
+      value: "5432"
+    - name: DB_USER
+      value: postgres
+    ports:
+    - containerPort: 8080
+    resources: {}
+  restartPolicy: Always

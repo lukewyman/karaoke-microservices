@@ -21,6 +21,7 @@ k8s_resource(
 # Database
 helm_resource('mongo', 'bitnami/mongodb',
                 resource_deps=['bitnami'],
+                labels='song-library',
                 flags=[
                     '--version=14.4.9',
                     '--set=architecture=standalone',
@@ -35,6 +36,26 @@ k8s_resource(
     'song-library-tests',
     labels=['song-library'],
     trigger_mode=TRIGGER_MODE_MANUAL
+)
+
+
+############ SINGERS ##############################
+# Database
+helm_resource('postgres', 'bitnami/postgresql',
+                resource_deps=['bitnami'],
+                labels='singers',
+                flags=[
+                    '--version=13.2.5',
+                    '--set=architecture=standalone',
+                    '--set=auth.postgresPassword=postgres'
+                ])
+
+# Migrations
+docker_build('singers-migrations', './migrations/singers/src')
+k8s_yaml('./deploy/k8s/singers-migrations.yaml')
+k8s_resource(
+    'singers-migrations',
+    labels=['singers']
 )
 
 
