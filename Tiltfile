@@ -5,6 +5,18 @@ helm_repo('bitnami', 'https://charts.bitnami.com/bitnami')
 
 
 ############ SONG LIBRARY (port 32101) ############
+# Database
+helm_resource('mongo', 'bitnami/mongodb',
+                resource_deps=['bitnami'],
+                labels='song-library',
+                flags=[
+                    '--version=14.4.9',
+                    '--set=architecture=standalone',
+                    '--set=useStatefulSet=true',
+                    '--set=auth.rootUser=admin',
+                    '--set=auth.rootPassword=p@ssw0RD123'
+                ])
+
 # Microservice
 docker_build('song-library', './microservices/song_library/src')
 k8s_yaml('./deploy/k8s/song-library.yaml')
@@ -17,18 +29,6 @@ k8s_resource(
     'mongo',
     labels=['song-library']
 )
-
-# Database
-helm_resource('mongo', 'bitnami/mongodb',
-                resource_deps=['bitnami'],
-                labels='song-library',
-                flags=[
-                    '--version=14.4.9',
-                    '--set=architecture=standalone',
-                    '--set=useStatefulSet=true',
-                    '--set=auth.rootUser=admin',
-                    '--set=auth.rootPassword=p@ssw0RD123'
-                ])
 
 #Tests
 k8s_yaml('./deploy/k8s/song-library-tests.yaml')
@@ -57,6 +57,17 @@ k8s_resource(
     'singers-migrations',
     labels=['singers']
 )
+
+# Microservice
+docker_build('singers', './microservices/singers/src')
+k8s_yaml('./deploy/k8s/singers.yaml')
+k8s_resource('singers',
+             labels=['singers']
+)
+k8s_resource('postgres',
+             labels=['singers']
+)
+
 
 
 ############ ROTATIONS (port 32103) ###############

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: singers
+  name: singers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: singers
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: singers
+    spec:
+      containers:
+      - image: singers
+        name: singers
+        command: 
+        - /bin/sh
+        - -c
+        - 'uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8080'
+        env:
+        - name: DB_HOST
+          value: postgres-postgresql
+        - name: DB_NAME
+          value: postgres
+        - name: DB_PASS
+          value: postgres
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_USER
+          value: postgres
+        ports:
+        - containerPort: 8080
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: singers
+  name: singers
+spec:
+  ports:
+  - name: 5002-8080
+    nodePort: 32102
+    port: 5002
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: singers
+  type: NodePort
