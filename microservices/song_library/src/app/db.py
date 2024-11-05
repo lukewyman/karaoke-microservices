@@ -2,6 +2,7 @@ import logging
 import os 
 import motor.motor_asyncio
 from bson import ObjectId
+import urllib.parse
 
 
 logger = logging.getLogger(__name__)
@@ -11,8 +12,8 @@ logger.setLevel(logging.INFO)
 def get_db():
     mongo_hostname = os.environ['MONGO_HOSTNAME']
     mongo_port = os.environ['MONGO_PORT']
-    mongo_username = os.environ['MONGO_USERNAME']
-    mongo_password = os.environ['MONGO_PASSWORD']
+    mongo_username = urllib.parse.quote_plus(os.environ['MONGO_USERNAME'])
+    mongo_password = urllib.parse.quote_plus(os.environ['MONGO_PASSWORD'])
     mongo_architecture = os.environ.get('MONGO_ARCHITECTURE', 'standalone')
     mongo_querystring   = '/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false'
     if mongo_architecture == 'standalone':
