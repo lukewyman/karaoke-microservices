@@ -2,7 +2,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, status, Body
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
-from .domain import Queue, QueueCreate, EnqueuedSinger, EnqueuedSingerCreate
+from .domain import Queue, QueueCreate, Singer, SingerCreate
 from .rotations import Rotations
 
 
@@ -33,7 +33,7 @@ def get_queue(queue_id):
 
 @router.post('/queues/{queue_id}/singers/', 
              response_description='Add singer to queue', response_model=Queue)
-def enqueue_singer(queue_id, singer_data: EnqueuedSingerCreate=Body(...)):
+def enqueue_singer(queue_id, singer_data: SingerCreate=Body(...)):
     rotations = Rotations.from_db(queue_id)
     rotations.add_singer(singer_data.singer_id)
 
@@ -45,7 +45,7 @@ def get_singer(queue_id, position_id):
     pass
 
 
-@router.delete('/queues/{queue_id}/singers/{enqueued_singer_id}',
+@router.delete('/queues/{queue_id}/singers/{singer_id}',
                response_description='Remove singer from queue', response_model=Queue)
 def remove_singer(queue_id, singer_id):
     pass 

@@ -1,17 +1,18 @@
 import uuid
-from .domain import Queue, QueueCreate, EnqueuedSinger
+from .domain import Queue, QueueCreate, Singer
 from .crud import (
-    create_enqueued_singer,
+    create_singer,
     create_queue,
-    delete_enqueued_singer,
+    delete_singer,
     get_queue,
-    get_enqueued_singers,
-    update_enqueued_singers,
+    get_singers,
+    update_singers,
     update_queue
 )
-from .mappers import (to_enqueued_singer_dbs, 
-                      to_enqueued_singers, 
+from .mappers import (to_singer_dbs, 
+                      to_singers, 
                       to_queue_db)
+
 
 class Rotations:
 
@@ -28,12 +29,12 @@ class Rotations:
     @classmethod
     def from_db(self, queue_id: uuid.UUID):
         queue = get_queue(queue_id=queue_id)
-        queue.singers = to_enqueued_singers(get_enqueued_singers(queue_id))
+        queue.singers = to_singers(get_singers(queue_id))
         return Rotations(queue=queue)
 
 
     @property
-    def current_singer(self) -> EnqueuedSinger:
+    def current_singer(self) -> Singer:
         if len(self.queue.singers) == 0:
             return None
         else:
@@ -54,7 +55,7 @@ class Rotations:
         
         position = len(self.queue.singers) + 1
 
-        enqueued_singer = create_enqueued_singer(queue_id=self.queue.queue_id,
+        enqueued_singer = create_singer(queue_id=self.queue.queue_id,
                                     singer_id=singer_id,
                                     queue_position=position)
         
@@ -86,8 +87,8 @@ class Rotations:
                 singer.position -= 1 
 
         update_queue(to_queue_db(self.queue))
-        delete_enqueued_singer(self.queue.queue_id, len(self.queue.singers))
+        delete_singer(self.queue.queue_id, len(self.queue.singers))
         self.queue.singers = [s for s in self.queue.singers if s.singer_id != singer_id]
         
-        update_enqueued_singers(to_enqueued_singer_dbs(self.queue.queue_id, self.queue.singers))
+        update_singers(to_singer_dbs(self.queue.queue_id, self.queue.singers))
         

@@ -1,34 +1,36 @@
 from datetime import datetime
 import uuid
-from .models import QueueDB, EnqueuedSingerDB
-from .domain import QueueCreate, Queue, EnqueuedSinger
+from .models import QueueDB, SingerDB
+from .domain import QueueCreate, Queue, Singer
 
 
-def create_enqueued_singer(queue_id: uuid.UUID, 
+def create_singer(queue_id: uuid.UUID, 
                            singer_id: uuid.UUID, 
                            queue_position: int):
         
-    enqueued_singer_db = EnqueuedSingerDB(queue_id=str(queue_id), 
+    enqueued_singer_db = SingerDB(queue_id=str(queue_id), 
                                      singer_id=str(singer_id), 
                                      queue_position=queue_position)
     
     enqueued_singer_db.save()
     
-    return EnqueuedSinger(singer_id=enqueued_singer_db.singer_id,
+    return Singer(singer_id=enqueued_singer_db.singer_id,
                           position=enqueued_singer_db.queue_position)
 
 
-def get_enqueued_singers(queue_id: uuid.UUID):
-    return EnqueuedSingerDB.query(str(queue_id))
+def get_singers(queue_id: uuid.UUID):
+    return SingerDB.query(str(queue_id))
 
 
-def update_enqueued_singers(singers: list[EnqueuedSingerDB]):
+def update_singers(singers: list[SingerDB]):
     for singer in singers:
         singer.save()
 
-def delete_enqueued_singer(queue_id: uuid.UUID, position: int):
-    singer = EnqueuedSingerDB(str(queue_id), position)
+
+def delete_singer(queue_id: uuid.UUID, position: int):
+    singer = SingerDB(str(queue_id), position)
     singer.delete()
+
 
 def create_queue(queue_data: QueueCreate):
     queueDB = QueueDB(queue_id=str(uuid.uuid4()), 

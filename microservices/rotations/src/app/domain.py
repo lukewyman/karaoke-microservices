@@ -3,15 +3,15 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
-class EnqueuedSingerBase(BaseModel):
+class SingerBase(BaseModel):
     singer_id: uuid.UUID
 
 
-class EnqueuedSingerCreate(EnqueuedSingerBase):
+class SingerCreate(SingerBase):
     pass 
 
 
-class EnqueuedSinger(EnqueuedSingerBase):
+class Singer(SingerBase):
     position: int
 
 
@@ -27,7 +27,7 @@ class Queue(QueueBase):
     queue_id: uuid.UUID
     location_id: uuid.UUID 
     event_date: datetime
-    singers: list[EnqueuedSinger] = []
+    singers: list[Singer] = []
     current_singer_index: int = 0
 
     class Config:

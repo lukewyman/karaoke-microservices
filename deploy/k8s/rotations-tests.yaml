@@ -15,7 +15,7 @@ spec:
           value: us-west-2
         - name: QUEUES_TABLE_NAME
           value: karaoke-app-local-dev-queues
-        - name: ENQUEUED_SINGERS_TABLE_NAME
+        - name: SINGERS_TABLE_NAME
           value: karaoke-app-local-dev-enqueued-singers
         resources: {}
       restartPolicy: Never

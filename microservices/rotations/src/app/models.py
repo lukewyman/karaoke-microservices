@@ -9,7 +9,7 @@ from pynamodb.attributes import (
 
 AWS_REGION = os.environ['AWS_REGION']
 QUEUES_TABLE_NAME = os.environ['QUEUES_TABLE_NAME']
-ENQUEUED_SINGERS_TABLE_NAME = os.environ['ENQUEUED_SINGERS_TABLE_NAME']
+SINGERS_TABLE_NAME = os.environ['SINGERS_TABLE_NAME']
 
 
 class QueueDB(Model):
@@ -23,9 +23,9 @@ class QueueDB(Model):
     current_singer_index = NumberAttribute(default=0)
 
 
-class EnqueuedSingerDB(Model):
+class SingerDB(Model):
     class Meta:
-        table_name = ENQUEUED_SINGERS_TABLE_NAME
+        table_name = SINGERS_TABLE_NAME
         region = AWS_REGION
 
     queue_id = UnicodeAttribute(hash_key=True)

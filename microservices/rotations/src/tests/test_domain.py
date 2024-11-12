@@ -5,10 +5,10 @@ from app.rotations import Rotations
 import pytest
 from moto import mock_dynamodb
 from .data import (
-    ENQUEUED_SINGERS,
+    SINGERS,
     _setup_queues_table,
-    _setup_enqueued_singers_table,
-    _populate_enqueued_singers_table
+    _setup_singers_table,
+    _populate_singers_table
 )
 
 @pytest.fixture(scope='function')
@@ -34,7 +34,7 @@ def singers_fixture():
 @mock_dynamodb
 def test_create_an_empty_queue():
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -47,7 +47,7 @@ def test_create_an_empty_queue():
 @mock_dynamodb
 def test_add_a_singer_to_a_queue(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -62,7 +62,7 @@ def test_add_a_singer_to_a_queue(singers_fixture):
 @mock_dynamodb
 def test_add_multiple_singers_to_a_queue(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -82,7 +82,7 @@ def test_add_multiple_singers_to_a_queue(singers_fixture):
 @mock_dynamodb
 def test_cannot_add_singer_already_in_rotation(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -98,7 +98,7 @@ def test_cannot_add_singer_already_in_rotation(singers_fixture):
 @mock_dynamodb
 def test_completing_performance_advances_queue_to_next_singer(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -117,7 +117,7 @@ def test_completing_performance_advances_queue_to_next_singer(singers_fixture):
 @mock_dynamodb
 def test_completing_performance_twice_advances_queue_2_singers(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -137,7 +137,7 @@ def test_completing_performance_twice_advances_queue_2_singers(singers_fixture):
 @mock_dynamodb
 def test_completing_performance_for_last_singer_returns_to_beginning_of_rotation(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -161,7 +161,7 @@ def test_completing_performance_for_last_singer_returns_to_beginning_of_rotation
 @mock_dynamodb
 def test_rotation_in_correct_state_after_removing_singer_after_current(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -187,7 +187,7 @@ def test_rotation_in_correct_state_after_removing_singer_after_current(singers_f
 @mock_dynamodb
 def test_rotation_in_correct_state_after_removing_singer_before_current(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -214,7 +214,7 @@ def test_rotation_in_correct_state_after_removing_singer_before_current(singers_
 @mock_dynamodb
 def test_rotation_in_correct_state_after_removing_current_singer(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -240,7 +240,7 @@ def test_rotation_in_correct_state_after_removing_current_singer(singers_fixture
 @mock_dynamodb
 def test_rotation_in_correct_state_after_removing_current_and_last_singer(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))
@@ -268,7 +268,7 @@ def test_rotation_in_correct_state_after_removing_current_and_last_singer(singer
 @mock_dynamodb
 def test_cannot_remove_singer_that_is_not_in_rotation(singers_fixture):
     _setup_queues_table()
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     location_id = uuid.uuid4()
     rotations = Rotations.new(QueueCreate(location_id=location_id))

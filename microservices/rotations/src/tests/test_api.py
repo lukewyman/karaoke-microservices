@@ -6,10 +6,10 @@ from moto import mock_dynamodb
 from .data import (
     _setup_queues_table,
     _populate_queues_table,
-    _setup_enqueued_singers_table,
-    _populate_enqueued_singers_table,
+    _setup_singers_table,
+    _populate_singers_table,
     QUEUES, 
-    ENQUEUED_SINGERS
+    SINGERS
 )
 
 
@@ -36,7 +36,7 @@ def test_start_queue(test_app: TestClient):
 def test_get_empty_queue(test_app: TestClient):
     _setup_queues_table()
     _populate_queues_table(QUEUES)
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
 
     queue_id = QUEUES[0]['queue_id']  
     response = test_app.get(f'/queues/{queue_id}')
@@ -51,7 +51,7 @@ def test_get_empty_queue(test_app: TestClient):
 def test_enqueue_singer(test_app: TestClient):
     _setup_queues_table()
     _populate_queues_table(QUEUES)
-    _setup_enqueued_singers_table()
+    _setup_singers_table()
     
     singer_data = {
         'singer_id': '69400125-d093-41c1-9415-6af0168078f4'
@@ -73,8 +73,8 @@ def test_enqueue_singer(test_app: TestClient):
 def test_get_singer(test_app: TestClient):
     _setup_queues_table()
     _populate_queues_table(QUEUES)
-    _setup_enqueued_singers_table()
-    _populate_enqueued_singers_table(ENQUEUED_SINGERS)
+    _setup_singers_table()
+    _populate_singers_table(SINGERS)
 
 
 @mock_dynamodb

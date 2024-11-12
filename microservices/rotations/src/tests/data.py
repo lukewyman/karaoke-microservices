@@ -1,5 +1,5 @@
 from datetime import datetime
-from app.models import QueueDB, EnqueuedSingerDB
+from app.models import QueueDB, SingerDB
 
 def _setup_queues_table():
     QueueDB.create_table()
@@ -9,13 +9,14 @@ def _populate_queues_table(queues):
     for queue in queues:
         QueueDB(**queue).save()
 
-def _setup_enqueued_singers_table():
-    EnqueuedSingerDB.create_table()
+
+def _setup_singers_table():
+    SingerDB.create_table()
 
 
-def _populate_enqueued_singers_table(enqueued_singers):
-    for enqueued_singer in enqueued_singers:
-        EnqueuedSingerDB(**enqueued_singer).save()
+def _populate_singers_table(singers):
+    for enqueued_singer in singers:
+        SingerDB(**enqueued_singer).save()
 
 
 QUEUES = [
@@ -34,7 +35,7 @@ QUEUES = [
 ]
 
 
-ENQUEUED_SINGERS = [
+SINGERS = [
     {
         'queue_id': '240722c4-16a4-46e5-89fd-773445d7d38e',
         'singer_id': '69400125-d093-41c1-9415-6af0168078f4',
