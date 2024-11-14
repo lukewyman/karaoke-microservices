@@ -30,7 +30,7 @@ class SingerDB(Model):
 
     queue_id = UnicodeAttribute(hash_key=True)
     singer_id = UnicodeAttribute()
-    queue_position = NumberAttribute(range_key=True)
+    position = NumberAttribute(range_key=True)
 
 
     

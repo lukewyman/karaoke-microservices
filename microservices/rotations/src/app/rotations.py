@@ -29,7 +29,7 @@ class Rotations:
     @classmethod
     def from_db(self, queue_id: uuid.UUID):
         queue = get_queue(queue_id=queue_id)
-        queue.singers = to_singers(get_singers(queue_id))
+        queue.singers = get_singers(queue_id)
         return Rotations(queue=queue)
 
 
@@ -57,7 +57,7 @@ class Rotations:
 
         enqueued_singer = create_singer(queue_id=self.queue.queue_id,
                                     singer_id=singer_id,
-                                    queue_position=position)
+                                    position=position)
         
         self.queue.singers.append(enqueued_singer)
     
@@ -90,5 +90,5 @@ class Rotations:
         delete_singer(self.queue.queue_id, len(self.queue.singers))
         self.queue.singers = [s for s in self.queue.singers if s.singer_id != singer_id]
         
-        update_singers(to_singer_dbs(self.queue.queue_id, self.queue.singers))
+        update_singers(self.queue.queue_id, to_singer_dbs(self.queue.queue_id, self.queue.singers))
         

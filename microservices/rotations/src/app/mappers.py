@@ -3,19 +3,19 @@ from .models import SingerDB, QueueDB
 import uuid
 
 
-def to_singer(enqueued_singer_db: SingerDB):
-    return Singer(singer_id=enqueued_singer_db.singer_id,
-                          position=enqueued_singer_db.queue_position)
+def to_singer(singer_db: SingerDB):
+    return Singer(singer_id=singer_db.singer_id,
+                          position=singer_db.position)
 
 
-def to_singers(enqueued_singer_dbs: list[SingerDB]):
-    return [to_singer(es) for es in enqueued_singer_dbs]
+def to_singers(singer_dbs: list[SingerDB]):
+    return [to_singer(es) for es in singer_dbs]
 
 
-def to_singer_db(queue_id: uuid.UUID, enqueued_singer: Singer):
+def to_singer_db(queue_id: uuid.UUID, singer: Singer):
     return SingerDB(str(queue_id), 
-                            enqueued_singer.position, 
-                            singer_id=str(enqueued_singer.singer_id))
+                            singer.position, 
+                            singer_id=str(singer.singer_id))
 
 
 def to_singer_dbs(queue_id: uuid.UUID, singers: Singer):

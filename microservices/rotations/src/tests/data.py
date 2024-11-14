@@ -39,17 +39,17 @@ SINGERS = [
     {
         'queue_id': '240722c4-16a4-46e5-89fd-773445d7d38e',
         'singer_id': '69400125-d093-41c1-9415-6af0168078f4',
-        'queue_position': 1
+        'position': 1
     },
     {
         'queue_id': '240722c4-16a4-46e5-89fd-773445d7d38e',
         'singer_id': '110974f0-9185-47c4-ae1b-f890048ea44d',
-        'queue_position': 2
+        'position': 2
     },
     {
         'queue_id': '240722c4-16a4-46e5-89fd-773445d7d38e',
         'singer_id': 'cf298018-4c0b-4aa9-b8d4-15ea48996811',
-        'queue_position': 3
+        'position': 3
     }
 ]
 
