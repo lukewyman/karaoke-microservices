@@ -4,6 +4,10 @@ load('ext://helm_resource', 'helm_resource', 'helm_repo')
 helm_repo('bitnami', 'https://charts.bitnami.com/bitnami')
 
 
+############ AWS CREDENTIALS ######################
+
+
+
 ############ SONG LIBRARY (port 32101) ############
 # Database
 helm_resource('mongo', 'bitnami/mongodb',
@@ -94,6 +98,7 @@ docker_build('song-choices', './microservices/song_choices/src')
 k8s_yaml('./deploy/k8s/song-choices.yaml')
 k8s_resource(
     'song-choices',
+    port_forwards='8084:8080',
     labels=['song-choices']
 )
 

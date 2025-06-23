@@ -29,6 +29,9 @@ spec:
           value: karaoke-app-local-dev-song-choices
         - name: SONG_LIBRARY_SERVICE
           value: song-library
+        envFrom:
+        - secretRef: 
+            name: aws-access-keys
         resources: {}
 ---
 apiVersion: v1
