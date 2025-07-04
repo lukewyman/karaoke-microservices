@@ -44,3 +44,22 @@ def test_get_song_choices():
     assert choices[0].position == 1
     
 
+@mock_dynamodb
+def test_delete_song_choice():
+    _setup_song_choices_table()
+    
+    queue_id = '1eec4ea6-9ada-42b7-84d6-999dc4727d02'
+    singer_id = '523de3ac-6341-45be-bab5-a97981285d1c'
+    song_id = 'new_song_choice'
+    position = 1
+
+    song_choice = SongChoice(queue_id=queue_id, 
+                             singer_id=singer_id, 
+                             song_id=song_id, 
+                             position=position)
+    crud.create_song_choice(song_choice=song_choice)
+
+    assert SongChoiceDB.count() == 1
+
+    crud.delete_song_choice(song_choice=song_choice)
+    assert SongChoiceDB.count() == 0

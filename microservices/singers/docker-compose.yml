@@ -9,11 +9,11 @@ services:
     ports:
       - 8082:8080
     environment:
-      - POSTGRES_HOSTNAME=db
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=singers
-      - POSTGRES_USERNAME=singers_app
-      - POSTGRES_PASSWORD=pa55w0RD
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=singers
+      - DB_USER=singers_app
+      - DB_PASS=pa55w0RD
     depends_on:
       - db
   db:

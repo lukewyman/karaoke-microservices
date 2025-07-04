@@ -24,9 +24,6 @@ def update_song_choices(song_choices: list[SongChoice]):
 
 
 def delete_song_choice(song_choice: SongChoice):
-    enqueued_singer_id = ':'.join([str(song_choice.queue_id), str(song_choice.singer_id)])
-    song_choice_db = SongChoiceDB(enqueued_singer_id, 
-                                  song_choice.song_id, 
-                                  song_choice.position)
+    song_choice_db = to_song_choice_db(song_choice)
     
     song_choice_db.delete()
